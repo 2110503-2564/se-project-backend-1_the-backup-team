@@ -34,7 +34,7 @@ const router = express.Router({ mergeParams: true })
  *           application/json:
  *             schema:
  *               type: array
- *               
+ *
  */
 
 /**
@@ -125,7 +125,6 @@ const router = express.Router({ mergeParams: true })
  *         description: Internal server error.
  */
 
-
 /**
  * @swagger
  * /events/{event_id}:
@@ -190,7 +189,6 @@ const router = express.Router({ mergeParams: true })
  *       500:
  *         description: Internal server error.
  */
-
 
 /**
  * @swagger
@@ -326,16 +324,15 @@ const router = express.Router({ mergeParams: true })
  *         description: Internal server error.
  */
 
-
 router.get('/', getEvents)
-router.post('/', createEvent)
+router.post('/', protect, authorize('admin'), createEvent)
 router.get('/attendance', protect, getEventAttendancesByUser)
 
 router.get('/:event_id', getEvent)
-router.put('/:event_id', editEvent)
-router.delete('/:event_id', deleteEvent)
+router.put('/:event_id', protect, authorize('admin'), editEvent)
+router.delete('/:event_id', protect, authorize('admin'), deleteEvent)
 
 router.post('/attendance/:event_id', protect, joinEvent)
-router.get('/attendance/:event_id',getEventAttendancesByEvent)
+router.get('/attendance/:event_id', getEventAttendancesByEvent)
 
 module.exports = router

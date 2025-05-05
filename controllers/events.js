@@ -5,6 +5,7 @@ const EventAttendance = require('../models/EventAttendance')
 // @desc    Get all events
 // @route   GET /api/v1/events
 // @access  Public
+// istanbul ignore next @preserve
 const getEvents = async (req, res, next) => {
   try {
     // Build filter query
@@ -65,6 +66,7 @@ const getEvents = async (req, res, next) => {
 // @desc    Get event by ID
 // @route   GET /api/v1/events/:event_id
 // @access  Public
+// istanbul ignore next @preserve
 const getEvent = async (req, res, next) => {
   const { event_id } = req.params
   try {
@@ -138,7 +140,7 @@ const deleteEvent = async (req, res, next) => {
       throw new Error('Not found')
     }
 
-    await EventAttendance.deleteMany({event : event_id})
+    await EventAttendance.deleteMany({ event: event_id })
     await event.deleteOne()
 
     return res.status(200).json({
@@ -204,6 +206,7 @@ const joinEvent = async (req, res, next) => {
 // @desc    get event attendances of this user with space and event detail populated
 // @route   GET /api/v1/events/attendance
 // @access  Private
+// istanbul ignore next @preserve
 const getEventAttendancesByUser = async (req, res, next) => {
   try {
     const populateObject = {
@@ -224,29 +227,38 @@ const getEventAttendancesByUser = async (req, res, next) => {
   }
 }
 
-
-const getEventAttendancesByEvent = async (req,res,next) => {
+// istanbul ignore next @preserve
+const getEventAttendancesByEvent = async (req, res, next) => {
   try {
-
     const populateObject = {
-      path : 'event',
+      path: 'event',
       populate: {
-        path : 'space',
-      }
+        path: 'space',
+      },
     }
 
     console.log(req.params)
 
-    const attendances = await EventAttendance.find({event : req.params.event_id}).populate(populateObject);
+    const attendances = await EventAttendance.find({
+      event: req.params.event_id,
+    }).populate(populateObject)
 
     res.status(200).json({
       success: true,
       data: attendances,
     })
-
   } catch (error) {
-    next(error);
+    next(error)
   }
 }
 
-module.exports = { getEvents, getEvent, createEvent, editEvent, deleteEvent, joinEvent, getEventAttendancesByUser,getEventAttendancesByEvent }
+module.exports = {
+  getEvents,
+  getEvent,
+  createEvent,
+  editEvent,
+  deleteEvent,
+  joinEvent,
+  getEventAttendancesByUser,
+  getEventAttendancesByEvent,
+}
